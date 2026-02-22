@@ -48,16 +48,14 @@ Opens the heightmap import dialog where you can:
 
 ### File Locations
 
-Heightmap files should be placed in your Hytale server's asset pack directory:
-```
-<YourHytaleServer>/Server/Imports/Heightmaps/
-```
+**⚠️ File Browser (WIP)**: The built-in file browser currently requires files to be packaged in an Assets.zip file, which is complex for normal users. This feature is still a work in progress.
 
-To find your Hytale server directory:
-1. Locate your Hytale server installation folder
-2. Navigate to the `Server/Imports/` subdirectory  
-3. Create a `Heightmaps` folder if it doesn't exist
-4. Place your heightmap files there
+**Recommended Method**: For now, enter the full path to your heightmap file manually in the "Heightmap File" input field.
+
+**Manual Path Entry**:
+- Windows: `C:\path\to\your\heightmap.png`
+- Linux/Mac: `/path/to/your/heightmap.png`
+- Or any absolute path to your heightmap file
 
 Supported file formats:
 - `.png` - PNG images (8-bit grayscale, 16-bit grayscale, RGB)
@@ -88,11 +86,14 @@ Supported file formats:
 
 ### Workflow
 1. Open the heightmap dialog with `/heightmap`
-2. Browse and select your heightmap file
+2. **Enter the full path to your heightmap file manually** in the "Heightmap File" field
+   - Example: `C:\path\to\your\heightmap.png`
 3. Adjust settings (scale, mode, blocks, etc.)
 4. Click **Import** to process the heightmap
 5. The mod automatically switches to the **paste tool**
 6. Use the paste tool to place your imported terrain
+
+**Note**: The file browser button is currently a work in progress and requires complex asset packaging. Manual path entry is recommended for now.
 
 ## Configuration
 
