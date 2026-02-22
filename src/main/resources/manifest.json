@@ -1,0 +1,10 @@
+{
+  "Group": "net.wolvesfortress",
+  "Name": "HyghtmapMod",
+  "Version": "1.0.0",
+  "Description": "A Hytale server mod for handling heightmaps (import)",
+  "Authors": [{"Name": "inxomnyaa"}],
+  "Main": "net.wolvesfortress.heightmap.HyghtmapModPlugin",
+  "LoadOrder": "POSTWORLD",
+  "IncludesAssetPack": true
+}

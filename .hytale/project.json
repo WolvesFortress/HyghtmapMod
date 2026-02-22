@@ -1,0 +1,10 @@
+{
+  "groupId": "net.wolvesfortress",
+  "artifactId": "hyghtmapmod",
+  "modName": "HyghtmapMod",
+  "version": "1.0.0",
+  "buildSystem": "Gradle",
+  "language": "Java",
+  "jarPath": "build/libs/HyghtmapMod-1.0.0.jar",
+  "buildTask": "shadowJar"
+}

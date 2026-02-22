@@ -1,0 +1,33 @@
+# Heightmap Import UI
+server.customUI.heightmapImport.title = Heightmap Import
+server.customUI.heightmapImport.description = Import a heightmap image as blocks. Supports PNG, BMP, JPEG, and raw F16/F32 formats.
+server.customUI.heightmapImport.filePath = Heightmap File
+server.customUI.heightmapImport.colormapPath = Colormap File
+server.customUI.heightmapImport.heightScale = Height Scale
+server.customUI.heightmapImport.maxSize = Max Size
+server.customUI.heightmapImport.baseBlock = Block Pattern
+server.customUI.heightmapImport.importMode = Import Mode
+server.customUI.heightmapImport.channel = Height Channel
+server.customUI.heightmapImport.origin = Origin
+server.customUI.heightmapImport.invertHeight = Invert Height
+server.customUI.heightmapImport.smooth = Smooth Pass
+server.customUI.heightmapImport.importButton = Import
+server.customUI.heightmapImport.browserTitle = Select Heightmap
+server.customUI.heightmapImport.colormapBrowserTitle = Select Colormap
+server.customUI.heightmapImport.searchPlaceholder = Search files...
+
+# Import modes
+server.customUI.heightmapImport.mode.heightmap = Heightmap (Solid)
+server.customUI.heightmapImport.mode.surface = Surface Only
+server.customUI.heightmapImport.mode.colormap = Colormap (Flat)
+server.customUI.heightmapImport.mode.normalmap = Normal Map
+
+# Channels
+server.customUI.heightmapImport.channel.luminance = Luminance
+server.customUI.heightmapImport.channel.red = Red
+server.customUI.heightmapImport.channel.green = Green
+server.customUI.heightmapImport.channel.blue = Blue
+server.customUI.heightmapImport.channel.alpha = Alpha
+
+# Success message
+server.heightmapMod.heightmapImport.success = Heightmap imported: {count} blocks ({width}x{height}x{depth}) copied to clipboard.
