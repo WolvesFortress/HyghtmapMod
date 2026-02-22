@@ -9,7 +9,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import net.wolvesfortress.heightmap.ui.HeightmapImportPage;
+import net.wolvesfortress.heightmap.HeightmapImportPage;
 
 import javax.annotation.Nonnull;
 
