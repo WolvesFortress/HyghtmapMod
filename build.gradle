@@ -70,7 +70,7 @@ tasks.register('watch') {
 
 // ── API Reference Generation ────────────────────────────────────────────────
 // Run: ./gradlew apiRef
-// Downloads HytaleServer.jar and generates plain-text API reference files
+// Uses HytaleServer.jar to generate plain-text API reference files
 // in .hytale-api/ for quick lookup during development.
 
 configurations {
@@ -340,7 +340,7 @@ tasks.register('dumpServerApi') {
 
 // Convenience alias
 tasks.register('apiRef') {
-    description = 'Download server jar and generate API reference'
+    description = 'Use server jar and generate API reference'
     group = 'api-reference'
     dependsOn 'dumpServerApi'
 }
