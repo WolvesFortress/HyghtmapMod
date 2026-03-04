@@ -67,3 +67,280 @@ tasks.register('watch') {
         println "Run 'gradle build --continuous' for auto-rebuild on file changes."
     }
 }
+
+// ── API Reference Generation ────────────────────────────────────────────────
+// Run: ./gradlew apiRef
+// Downloads HytaleServer.jar and generates plain-text API reference files
+// in .hytale-api/ for quick lookup during development.
+
+configurations {
+    apiDump
+}
+
+dependencies {
+    apiDump 'org.ow2.asm:asm:9.7.1'
+    apiDump 'org.ow2.asm:asm-tree:9.7.1'
+}
+
+tasks.register('dumpServerApi') {
+    description = 'Generates text-based API reference from libs/HytaleServer.jar'
+    group = 'api-reference'
+
+    def serverJar = file('libs/HytaleServer.jar')
+    def outputDir = file('.hytale-api')
+
+    inputs.file(serverJar)
+    outputs.dir(outputDir)
+
+    doLast {
+        // Load ASM via the apiDump configuration
+        def asmUrls = configurations.apiDump.files.collect { it.toURI().toURL() } as URL[]
+        def asmLoader = new URLClassLoader(asmUrls, getClass().classLoader)
+
+        def ClassReader  = asmLoader.loadClass('org.objectweb.asm.ClassReader')
+        def ClassNode    = asmLoader.loadClass('org.objectweb.asm.tree.ClassNode')
+
+        // ── Helper closures ─────────────────────────────────────────────
+
+        def descriptorToType = { String desc ->
+            int arrayDim = 0
+            def d = desc
+            while (d.startsWith('[')) { arrayDim++; d = d.substring(1) }
+            def base
+            switch (d) {
+                case 'V': base = 'void'; break
+                case 'Z': base = 'boolean'; break
+                case 'B': base = 'byte'; break
+                case 'C': base = 'char'; break
+                case 'S': base = 'short'; break
+                case 'I': base = 'int'; break
+                case 'J': base = 'long'; break
+                case 'F': base = 'float'; break
+                case 'D': base = 'double'; break
+                default:
+                    if (d.startsWith('L') && d.endsWith(';')) {
+                        base = d.substring(1, d.length() - 1).replace('/', '.')
+                    } else {
+                        base = d
+                    }
+            }
+            return base + ('[]' * arrayDim)
+        }
+
+        def accessToString = { int access ->
+            def parts = []
+            if ((access & 0x0001) != 0) parts.add('public')
+            else if ((access & 0x0004) != 0) parts.add('protected')
+            else if ((access & 0x0002) != 0) parts.add('private')
+            if ((access & 0x0008) != 0) parts.add('static')
+            if ((access & 0x0010) != 0) parts.add('final')
+            if ((access & 0x0400) != 0) parts.add('abstract')
+            return parts.join(' ')
+        }
+
+        def getClassKind = { node ->
+            int access = node.access
+            if ((access & 0x2000) != 0) return '@interface'   // ACC_ANNOTATION
+            if ((access & 0x4000) != 0) return 'enum'         // ACC_ENUM
+            if ((access & 0x0200) != 0) return 'interface'    // ACC_INTERFACE
+            if ((access & 0x0400) != 0) return 'abstract class'
+            return 'class'
+        }
+
+        def parseMethodParams = { String descriptor ->
+            def params = []
+            def d = descriptor.substring(1) // skip '('
+            while (!d.startsWith(')')) {
+                int arrayDim = 0
+                while (d.startsWith('[')) { arrayDim++; d = d.substring(1) }
+                if (d.startsWith('L')) {
+                    int end = d.indexOf(';')
+                    params.add(d.substring(1, end).replace('/', '.') + ('[]' * arrayDim))
+                    d = d.substring(end + 1)
+                } else {
+                    def base
+                    switch (d.charAt(0)) {
+                        case 'Z': base = 'boolean'; break
+                        case 'B': base = 'byte'; break
+                        case 'C': base = 'char'; break
+                        case 'S': base = 'short'; break
+                        case 'I': base = 'int'; break
+                        case 'J': base = 'long'; break
+                        case 'F': base = 'float'; break
+                        case 'D': base = 'double'; break
+                        default: base = String.valueOf(d.charAt(0))
+                    }
+                    params.add(base + ('[]' * arrayDim))
+                    d = d.substring(1)
+                }
+            }
+            return params
+        }
+
+        def getReturnType = { String descriptor ->
+            descriptorToType(descriptor.substring(descriptor.indexOf(')') + 1))
+        }
+
+        def getParamNames = { methodNode, int paramCount ->
+            def localVars = methodNode.localVariables
+            if (localVars) {
+                def isStatic = (methodNode.access & 0x0008) != 0
+                def startIdx = isStatic ? 0 : 1
+                def paramVars = localVars.findAll { it.index >= startIdx && it.index < startIdx + paramCount }
+                                          .sort { it.index }
+                if (paramVars.size() == paramCount) {
+                    return paramVars.collect { it.name }
+                }
+            }
+            return (0..<paramCount).collect { "arg${it}" }
+        }
+
+        // ── Read all classes from the jar ───────────────────────────────
+
+        def classes = []
+        new java.util.jar.JarFile(serverJar).withCloseable { jar ->
+            jar.entries().each { entry ->
+                if (entry.name.endsWith('.class') && !entry.name.startsWith('META-INF/')) {
+                    try {
+                        jar.getInputStream(entry).withStream { is ->
+                            def reader = ClassReader.getConstructor(InputStream).newInstance(is)
+                            def node = ClassNode.getDeclaredConstructor().newInstance()
+                            reader.invokeMethod('accept', [node, 0] as Object[])
+                            if (node.name.startsWith('com/hypixel/hytale/')) {
+                                classes.add(node)
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Skip unreadable classes
+                    }
+                }
+            }
+        }
+        println "Found ${classes.size()} classes in com.hypixel.hytale namespace"
+
+        // ── Clean and prepare output directory ──────────────────────────
+
+        if (outputDir.exists()) outputDir.deleteDir()
+        outputDir.mkdirs()
+
+        // ── Group by top-level subpackage ───────────────────────────────
+
+        def grouped = classes.groupBy { node ->
+            def parts = node.name.split('/')
+            parts.length >= 4 ? parts[3] : '_root'
+        }
+
+        // ── Write per-group files ───────────────────────────────────────
+
+        grouped.each { groupName, groupClasses ->
+            def outFile = new File(outputDir, "${groupName}.txt")
+            outFile.withWriter('UTF-8') { writer ->
+                writer.writeLine("# Hytale Server API: com.hypixel.hytale.${groupName}")
+                writer.writeLine("# Generated from HytaleServer.jar")
+                writer.writeLine("")
+
+                groupClasses.sort { it.name }.each { node ->
+                    def className = node.name.replace('/', '.')
+                    def shortName = className.substring(className.lastIndexOf('.') + 1)
+
+                    // Skip anonymous inner classes
+                    if (shortName.matches('.*\\$\\d+$')) return
+
+                    def packageName = className.substring(0, className.lastIndexOf('.'))
+                    def kind = getClassKind(node)
+                    // Strip 'abstract' from access — already captured in kind ("abstract class")
+                    def accessStr = accessToString(node.access).replace('abstract ', '').trim()
+
+                    writer.writeLine('=' * 80)
+                    writer.writeLine("package ${packageName}")
+                    writer.writeLine("${accessStr} ${kind} ${shortName}")
+
+                    if (node.superName && node.superName != 'java/lang/Object') {
+                        writer.writeLine("  extends ${node.superName.replace('/', '.')}")
+                    }
+                    if (node.interfaces && !node.interfaces.isEmpty()) {
+                        def keyword = (node.access & 0x0200) != 0 ? 'extends' : 'implements'
+                        writer.writeLine("  ${keyword} ${node.interfaces.collect { it.replace('/', '.') }.join(', ')}")
+                    }
+                    writer.writeLine("")
+
+                    // Enum constants
+                    if ((node.access & 0x4000) != 0) {
+                        def enumConsts = node.fields?.findAll { (it.access & 0x4000) != 0 }
+                        if (enumConsts) {
+                            writer.writeLine("  // Enum constants:")
+                            enumConsts.each { f -> writer.writeLine("  ${f.name}") }
+                            writer.writeLine("")
+                        }
+                    }
+
+                    // Fields (non-enum, non-synthetic)
+                    def fields = node.fields?.findAll { f ->
+                        (f.access & 0x4000) == 0 && (f.access & 0x1000) == 0
+                    }
+                    if (fields) {
+                        writer.writeLine("  // Fields:")
+                        fields.each { f ->
+                            writer.writeLine("  ${accessToString(f.access)} ${descriptorToType(f.desc)} ${f.name}")
+                        }
+                        writer.writeLine("")
+                    }
+
+                    // Constructors
+                    def ctors = node.methods?.findAll { it.name == '<init>' && (it.access & 0x1000) == 0 }
+                    if (ctors) {
+                        writer.writeLine("  // Constructors:")
+                        ctors.each { m ->
+                            def params = parseMethodParams(m.desc)
+                            def names = getParamNames(m, params.size())
+                            def paramStr = params.withIndex().collect { type, i -> "${type} ${names[i]}" }.join(', ')
+                            writer.writeLine("  ${accessToString(m.access)} ${shortName}(${paramStr})")
+                        }
+                        writer.writeLine("")
+                    }
+
+                    // Methods (non-init, non-synthetic, non-bridge)
+                    def methods = node.methods?.findAll { m ->
+                        m.name != '<init>' && m.name != '<clinit>' &&
+                        (m.access & 0x1000) == 0 && (m.access & 0x0040) == 0
+                    }
+                    if (methods) {
+                        writer.writeLine("  // Methods:")
+                        methods.sort { it.name }.each { m ->
+                            def ret = getReturnType(m.desc)
+                            def params = parseMethodParams(m.desc)
+                            def names = getParamNames(m, params.size())
+                            def paramStr = params.withIndex().collect { type, i -> "${type} ${names[i]}" }.join(', ')
+                            writer.writeLine("  ${accessToString(m.access)} ${ret} ${m.name}(${paramStr})")
+                        }
+                        writer.writeLine("")
+                    }
+
+                    writer.writeLine("")
+                }
+            }
+            println "  ${outFile.name}: ${groupClasses.size()} classes"
+        }
+
+        // ── Master index ────────────────────────────────────────────────
+
+        def indexFile = new File(outputDir, '_index.txt')
+        indexFile.withWriter('UTF-8') { writer ->
+            writer.writeLine("# Hytale Server API Index")
+            writer.writeLine("# Total classes: ${classes.size()}")
+            writer.writeLine("")
+            classes.sort { it.name }.each { node ->
+                writer.writeLine("${getClassKind(node)} ${node.name.replace('/', '.')}")
+            }
+        }
+
+        println "API reference generated in ${outputDir}/ (${classes.size()} classes)"
+    }
+}
+
+// Convenience alias
+tasks.register('apiRef') {
+    description = 'Download server jar and generate API reference'
+    group = 'api-reference'
+    dependsOn 'dumpServerApi'
+}

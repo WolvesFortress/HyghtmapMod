@@ -16,7 +16,7 @@ Group #FormContainer {
 
     #Title {
       $C.@Title {
-        @Text = %server.customUI.heightmapImport.title;
+        @Text = hyghtmap.customUI.heightmapImport.title;
       }
     }
 
@@ -27,7 +27,7 @@ Group #FormContainer {
       Label {
         Anchor: (Bottom: 12);
         Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 14, TextColor: #94969a);
-        Text: %server.customUI.heightmapImport.description;
+        Text: hyghtmap.customUI.heightmapImport.description;
       }
 
       Group {
@@ -42,7 +42,7 @@ Group #FormContainer {
           Anchor: (Bottom: 10);
 
           Label {
-            Text: %server.customUI.heightmapImport.filePath;
+            Text: hyghtmap.customUI.heightmapImport.filePath;
             Anchor: (Bottom: 4);
             Style: $C.@DefaultLabelStyle;
           }
@@ -60,7 +60,7 @@ Group #FormContainer {
 
             $C.@SecondaryTextButton #BrowseButton {
               @Anchor = (Width: 140);
-              Text: %server.customUI.browse;
+              Text: hyghtmap.customUI.browse;
             }
           }
         }
@@ -71,7 +71,7 @@ Group #FormContainer {
           Anchor: (Bottom: 8, Height: 35);
 
           Label {
-            Text: %server.customUI.heightmapImport.heightScale;
+            Text: hyghtmap.customUI.heightmapImport.heightScale;
             Anchor: (Width: 140);
             Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center);
           }
@@ -93,7 +93,7 @@ Group #FormContainer {
           Anchor: (Bottom: 8);
 
           Label {
-            Text: %server.customUI.heightmapImport.baseBlock;
+            Text: hyghtmap.customUI.heightmapImport.baseBlock;
             Anchor: (Bottom: 4);
             Style: $C.@DefaultLabelStyle;
           }
@@ -111,7 +111,7 @@ Group #FormContainer {
           Anchor: (Bottom: 8, Height: 35);
 
           Label {
-            Text: %server.customUI.heightmapImport.importMode;
+            Text: hyghtmap.customUI.heightmapImport.importMode;
             Anchor: (Width: 140);
             Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center);
           }
@@ -127,7 +127,7 @@ Group #FormContainer {
           Anchor: (Bottom: 8, Height: 35);
 
           Label {
-            Text: %server.customUI.heightmapImport.channel;
+            Text: hyghtmap.customUI.heightmapImport.channel;
             Anchor: (Width: 140);
             Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center);
           }
@@ -144,7 +144,7 @@ Group #FormContainer {
           Visible: false;
 
           Label {
-            Text: %server.customUI.heightmapImport.colormapPath;
+            Text: hyghtmap.customUI.heightmapImport.colormapPath;
             Anchor: (Bottom: 4);
             Style: $C.@DefaultLabelStyle;
           }
@@ -162,7 +162,7 @@ Group #FormContainer {
 
             $C.@SecondaryTextButton #BrowseButton {
               @Anchor = (Width: 140);
-              Text: %server.customUI.browse;
+              Text: hyghtmap.customUI.browse;
             }
           }
         }
@@ -173,7 +173,7 @@ Group #FormContainer {
           Anchor: (Top: 4, Bottom: 8);
 
           $C.@CheckBoxWithLabel #InvertCheckbox {
-            @Text = %server.customUI.heightmapImport.invertHeight;
+            @Text = hyghtmap.customUI.heightmapImport.invertHeight;
             @Checked = false;
           }
         }
@@ -184,7 +184,7 @@ Group #FormContainer {
           Anchor: (Top: 4, Bottom: 8);
 
           $C.@CheckBoxWithLabel #SmoothCheckbox {
-            @Text = %server.customUI.heightmapImport.smooth;
+            @Text = hyghtmap.customUI.heightmapImport.smooth;
             @Checked = false;
           }
         }
@@ -195,7 +195,7 @@ Group #FormContainer {
           Anchor: (Bottom: 8, Height: 35);
 
           Label {
-            Text: %server.customUI.heightmapImport.origin;
+            Text: hyghtmap.customUI.heightmapImport.origin;
             Anchor: (Width: 140);
             Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center);
           }
@@ -211,7 +211,7 @@ Group #FormContainer {
           Anchor: (Height: 35);
 
           Label {
-            Text: %server.customUI.heightmapImport.maxSize;
+            Text: hyghtmap.customUI.heightmapImport.maxSize;
             Anchor: (Width: 140);
             Style: (...$C.@DefaultLabelStyle, VerticalAlignment: Center);
           }
@@ -245,7 +245,7 @@ Group #FormContainer {
         Anchor: (Top: 6);
 
         $C.@TextButton #ImportButton {
-          Text: %server.customUI.heightmapImport.importButton;
+          Text: hyghtmap.customUI.heightmapImport.importButton;
         }
       }
     }
@@ -262,7 +262,7 @@ $C.@PageOverlay #BrowserPage {
 
     #Title {
       $C.@Title {
-        @Text = %server.customUI.heightmapImport.browserTitle;
+        @Text = hyghtmap.customUI.heightmapImport.browserTitle;
       }
     }
 
@@ -289,7 +289,7 @@ $C.@PageOverlay #BrowserPage {
             $C.@TextField #SearchInput {
               @Anchor = (Left: 0);
               FlexWeight: 1;
-              PlaceholderText: %server.customUI.heightmapImport.searchPlaceholder;
+              PlaceholderText: hyghtmap.customUI.heightmapImport.searchPlaceholder;
             }
           }
 
@@ -308,14 +308,14 @@ $C.@PageOverlay #BrowserPage {
         $C.@TextButton #SelectButton {
           @Sounds = $Sounds.@SaveSettings;
           @Anchor = (Right: 4);
-          Text: %server.customUI.select;
+          Text: hyghtmap.customUI.select;
           FlexWeight: 1;
         }
 
         $C.@SecondaryTextButton #CancelButton {
           @Sounds = $Sounds.@ButtonsCancel;
           @Anchor = (Left: 4);
-          Text: %server.customUI.cancel;
+          Text: hyghtmap.customUI.cancel;
           FlexWeight: 1;
         }
       }
@@ -333,7 +333,7 @@ $C.@PageOverlay #ColormapBrowserPage {
 
     #Title {
       $C.@Title {
-        @Text = %server.customUI.heightmapImport.colormapBrowserTitle;
+        @Text = hyghtmap.customUI.heightmapImport.colormapBrowserTitle;
       }
     }
 
@@ -360,7 +360,7 @@ $C.@PageOverlay #ColormapBrowserPage {
             $C.@TextField #SearchInput {
               @Anchor = (Left: 0);
               FlexWeight: 1;
-              PlaceholderText: %server.customUI.heightmapImport.searchPlaceholder;
+              PlaceholderText: hyghtmap.customUI.heightmapImport.searchPlaceholder;
             }
           }
 
@@ -379,14 +379,14 @@ $C.@PageOverlay #ColormapBrowserPage {
         $C.@TextButton #SelectButton {
           @Sounds = $Sounds.@SaveSettings;
           @Anchor = (Right: 4);
-          Text: %server.customUI.select;
+          Text: hyghtmap.customUI.select;
           FlexWeight: 1;
         }
 
         $C.@SecondaryTextButton #CancelButton {
           @Sounds = $Sounds.@ButtonsCancel;
           @Anchor = (Left: 4);
-          Text: %server.customUI.cancel;
+          Text: hyghtmap.customUI.cancel;
           FlexWeight: 1;
         }
       }
