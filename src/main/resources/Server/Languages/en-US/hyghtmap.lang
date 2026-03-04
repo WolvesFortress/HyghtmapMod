@@ -1,0 +1,45 @@
+# Heightmap Import UI
+customUI.heightmapImport.title = Heightmap Import
+customUI.heightmapImport.description = Import a heightmap image as blocks. Supports PNG, BMP, JPEG, and raw F16/F32 formats.
+customUI.heightmapImport.filePath = Heightmap File
+customUI.heightmapImport.colormapPath = Colormap File
+customUI.heightmapImport.heightScale = Height Scale
+customUI.heightmapImport.maxSize = Max Size
+customUI.heightmapImport.baseBlock = Block Pattern
+customUI.heightmapImport.importMode = Import Mode
+customUI.heightmapImport.channel = Height Channel
+customUI.heightmapImport.origin = Origin
+customUI.heightmapImport.invertHeight = Invert Height
+customUI.heightmapImport.smooth = Smooth Pass
+customUI.heightmapImport.importButton = Import
+customUI.heightmapImport.browserTitle = Select Heightmap
+customUI.heightmapImport.colormapBrowserTitle = Select Colormap
+customUI.heightmapImport.searchPlaceholder = Search files...
+
+# Common UI actions
+customUI.browse = Browse
+customUI.select = Select
+customUI.cancel = Cancel
+
+# Import modes
+customUI.heightmapImport.mode.heightmap = Heightmap (Solid)
+customUI.heightmapImport.mode.surface = Surface Only
+customUI.heightmapImport.mode.colormap = Colormap (Flat)
+customUI.heightmapImport.mode.normalmap = Normal Map
+
+# Channels
+customUI.heightmapImport.channel.luminance = Luminance
+customUI.heightmapImport.channel.red = Red
+customUI.heightmapImport.channel.green = Green
+customUI.heightmapImport.channel.blue = Blue
+customUI.heightmapImport.channel.alpha = Alpha
+
+# Origins
+customUI.origin.bottom_front_left = Bottom Front Left
+customUI.origin.bottom_center = Bottom Center
+customUI.origin.center = Center
+customUI.origin.top_center = Top Center
+
+# Success message
+heightmapMod.heightmapImport.success = Heightmap imported: {count} blocks ({width}x{height}x{depth}) copied to clipboard.
+

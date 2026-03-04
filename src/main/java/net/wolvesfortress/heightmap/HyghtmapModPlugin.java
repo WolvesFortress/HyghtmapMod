@@ -45,7 +45,7 @@ public class HyghtmapModPlugin extends JavaPlugin {
     private void registerCommands() {
         try {
             getCommandRegistry().registerCommand(new HyghtmapModPluginCommand());
-            LOGGER.at(Level.INFO).log("[HyghtmapMod] Registered /heightmap command");
+            LOGGER.at(Level.INFO).log("[HyghtmapMod] Registered /heightmap");
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[HyghtmapMod] Failed to register commands");
         }

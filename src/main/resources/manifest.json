@@ -6,5 +6,6 @@
   "Authors": [{"Name": "inxomnyaa"}],
   "Main": "net.wolvesfortress.heightmap.HyghtmapModPlugin",
   "LoadOrder": "POSTWORLD",
-  "IncludesAssetPack": true
+  "IncludesAssetPack": true,
+  "ServerVersion": "2026.02.19-1a311a592"
 }
