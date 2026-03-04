@@ -5,7 +5,6 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.logger.HytaleLogger;
 
 import net.wolvesfortress.heightmap.commands.HyghtmapModPluginCommand;
-import com.hypixel.hytale.builtin.buildertools.tooloperations.LayerBrushOperation;
 
 import javax.annotation.Nonnull;
 import java.util.logging.Level;
@@ -33,9 +32,6 @@ public class HyghtmapModPlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
-        // Register custom tool operations
-        registerToolOperations();
-
         // Register commands
         registerCommands();
 
@@ -49,7 +45,6 @@ public class HyghtmapModPlugin extends JavaPlugin {
     private void registerCommands() {
         try {
             getCommandRegistry().registerCommand(new HyghtmapModPluginCommand());
-            getCommandRegistry().registerCommand(new FsuCommand());
             LOGGER.at(Level.INFO).log("[HyghtmapMod] Registered /heightmap");
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[HyghtmapMod] Failed to register commands");
